@@ -14,15 +14,18 @@
 #### The gif below exemplifies the generation of the tags for the [WhatsApp-Simple-Tools](https://github.com/lucas26xd/WhatsApp-Simple-Tools) repository, showing different customizations of them changing the colors, styles and quantity of tags.
 ![Gif example](http://g.recordit.co/sIt0KD2y8T.gif)
 
+#### To run the application, run the following command:
+> python main.py
+
 ## 🚀 Tecnologies
-#### All the code was built in [Python](https://www.python.org/). How was my first experience with the library [PyQt5](https://pypi.org/project/PyQt5/) I also used the support of the screen creator [QtDesign](https://build-system.fman.io/qt-designer-download).
+#### All the code was built in [Python3](https://www.python.org/). How was my first experience with the library [PyQt5](https://pypi.org/project/PyQt5/) I also used the support of the screen creator [QtDesign](https://build-system.fman.io/qt-designer-download).
 
 ## 🔨 Dependencies
 #### The list of libraries and their respective versions are listed in the file [requirements.txt](requirements.txt).
 #### To install all dependencies you can use the following command:
 > pip install -r requirements.txt
 
-Make sure you have [pip](https://pypi.org/project/pip/) and [Python](https://www.python.org/) installed on your computer.
+Make sure you have [pip](https://pypi.org/project/pip/) and [Python3](https://www.python.org/) installed on your computer.
 
 List of dependencies:
 - [PyQt5](https://pypi.org/project/PyQt5/): Library for the graphical interface.
