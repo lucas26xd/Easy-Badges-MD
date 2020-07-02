@@ -1,7 +1,6 @@
-from PyQt5 import QtCore, QtGui, QtWidgets, QtWebEngineWidgets
+from PyQt5 import Qt, QtCore, QtGui, QtWidgets, QtWebEngineWidgets
 from re import search
 from markdown import markdown
-from pyperclip import copy
 
 
 class MainUi(object):
@@ -246,13 +245,6 @@ class MainUi(object):
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontal_layout_buttons.addItem(spacerItem)
 
-        self.btn_copy = QtWidgets.QPushButton(self.vertical_layout_widget)
-        self.btn_copy.setFont(bold_font)
-        self.btn_copy.setToolTip("Copy to Clipboard")
-        self.btn_copy.setText("Copy")
-        self.btn_copy.clicked.connect(self.copy_to_clipboard)
-        self.horizontal_layout_buttons.addWidget(self.btn_copy)
-
         self.btn_ok = QtWidgets.QPushButton(self.vertical_layout_widget)
         self.btn_ok.setFont(bold_font)
         self.btn_ok.setToolTip("Generate code Markdown")
@@ -274,8 +266,9 @@ class MainUi(object):
             color = search(r'^([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$', self.tf_other_color.text().replace('#', ''))
             if not color:  # Checks whether the text entered matches the HEX color pattern
                 color = '000'
-                QtWidgets.QMessageBox.question(self, 'Color error', 'Expected HEX color pattern (FFF or FFFFFF)')
-            color = color.string
+                self.message('Expected HEX color pattern (FFF or FFFFFF). Setting black color in badges.', 'Color pattern error', QtWidgets.QMessageBox.Critical)
+            else:
+                color = color.string
         return color
 
     def selected_style(self):
@@ -283,22 +276,32 @@ class MainUi(object):
 
     def result(self):
         self.tf_result.clear()
+        color = self.selected_color()
         if self.cb_author.isChecked():
-            self.tf_result.appendPlainText(f'[![GitHub author](https://img.shields.io/badge/author-{self.tf_github_profile.text()}-{self.selected_color()}?style={self.selected_style()})](https://github.com/{self.tf_github_profile.text()})')
+            self.tf_result.appendPlainText(f'[![GitHub author](https://img.shields.io/badge/author-{self.tf_github_profile.text()}-{color}?style={self.selected_style()})](https://github.com/{self.tf_github_profile.text()})')
         if self.cb_last_commit.isChecked():
-            self.tf_result.appendPlainText(f'[![GitHub last commit](https://img.shields.io/github/last-commit/{self.tf_github_profile.text()}/{self.tf_github_repo.text()}?color={self.selected_color()}&style={self.selected_style()})](../../commits/master)')
+            self.tf_result.appendPlainText(f'[![GitHub last commit](https://img.shields.io/github/last-commit/{self.tf_github_profile.text()}/{self.tf_github_repo.text()}?color={color}&style={self.selected_style()})](../../commits/master)')
         if self.cb_repo_size.isChecked():
-            self.tf_result.appendPlainText(f'![GitHub repo size](https://img.shields.io/github/repo-size/{self.tf_github_profile.text()}/{self.tf_github_repo.text()}?color={self.selected_color()}&style={self.selected_style()})')
+            self.tf_result.appendPlainText(f'![GitHub repo size](https://img.shields.io/github/repo-size/{self.tf_github_profile.text()}/{self.tf_github_repo.text()}?color={color}&style={self.selected_style()})')
         if self.cb_license.isChecked():
-            self.tf_result.appendPlainText(f'[![GitHub license](https://img.shields.io/github/license/{self.tf_github_profile.text()}/{self.tf_github_repo.text()}?color={self.selected_color()}&style={self.selected_style()})](LICENSE)')
+            self.tf_result.appendPlainText(f'[![GitHub license](https://img.shields.io/github/license/{self.tf_github_profile.text()}/{self.tf_github_repo.text()}?color={color}&style={self.selected_style()})](LICENSE)')
         if self.cb_top_language.isChecked():
-            self.tf_result.appendPlainText(f'![GitHub top language](https://img.shields.io/github/languages/top/{self.tf_github_profile.text()}/{self.tf_github_repo.text()}?color={self.selected_color()}&style={self.selected_style()})')
+            self.tf_result.appendPlainText(f'![GitHub top language](https://img.shields.io/github/languages/top/{self.tf_github_profile.text()}/{self.tf_github_repo.text()}?color={color}&style={self.selected_style()})')
         if self.cb_num_languages.isChecked():
-            self.tf_result.appendPlainText(f'![GitHub count language](https://img.shields.io/github/languages/count/{self.tf_github_profile.text()}/{self.tf_github_repo.text()}?color={self.selected_color()}&style={self.selected_style()})')
+            self.tf_result.appendPlainText(f'![GitHub count language](https://img.shields.io/github/languages/count/{self.tf_github_profile.text()}/{self.tf_github_repo.text()}?color={color}&style={self.selected_style()})')
         self.result_view.setHtml(markdown(self.tf_result.toPlainText()))
+        clipboard = Qt.QApplication.clipboard()
+        clipboard.setText(self.tf_result.toPlainText())
+        self.message('Result copied to clipboard!', 'Copied!')
 
-    def copy_to_clipboard(self):
-        copy(self.tf_result.toPlainText())
+    def message(self, text, title, type=QtWidgets.QMessageBox.Information):
+        msg = QtWidgets.QMessageBox()
+        msg.setIcon(type)
+        msg.setText(text)
+        msg.setWindowTitle(title)
+        msg.setStandardButtons(QtWidgets.QMessageBox.Ok)
+        msg.setWindowIcon(QtGui.QIcon('./shields.io.png'))
+        msg.exec_()
 
 
 if __name__ == "__main__":

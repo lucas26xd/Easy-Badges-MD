@@ -30,6 +30,5 @@ Make sure you have [pip](https://pypi.org/project/pip/) and [Python3](https://ww
 List of dependencies:
 - [PyQt5](https://pypi.org/project/PyQt5/): Library for the graphical interface.
 - [Markdown](https://pypi.org/project/Markdown/): Library for viewing the generated Markdown.
-- [pyperclip](https://pypi.org/project/pyperclip/): Library to copy the generated result to your clipboard.
 
 Made with 💙 and Python
